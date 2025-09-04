@@ -1,17 +1,30 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Site Videochat România</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --accent: #ff0ea0;
+      --bg: #fff;
+      --text: #333;
+      --muted: #f9f9f9;
+      --ok: #28a745;
+      --danger: crimson;
+      --chip: #888888;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: 'Montserrat', sans-serif;
-      background: #fff;
-      color: #333;
+      background: var(--bg);
+      color: var(--text);
     }
+
     header {
       background: #111;
       color: white;
@@ -19,791 +32,744 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
+
     header h1 {
-      color: #ff0ea0;
+      color: var(--accent);
       font-size: 2rem;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.5rem 0;
     }
+
     nav {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-    nav a {
-  color: white;
-  margin: 0.5rem 1rem;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 1rem;
-  padding: 0.3rem 0.6rem;
-  cursor: pointer;
-}
-    .btn {
-      background: #ff0ea0;
-      color: white;
-      padding: 0.8rem 1.5rem;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 5px;
-      display: inline-block;
-      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
+
+    nav button {
+      background-color: var(--chip);
+      color: white;
+      font-size: 1.05rem;
+      padding: 0.6rem 1.1rem;
+      margin: 0.25rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
     .tools {
       padding: 2rem;
-      background: #f9f9f9;
+      background: var(--muted);
       display: none;
+      min-height: 30vh;
     }
-    .tools.active {
-      display: block;
-    }
-    .tools h2 {
-      text-align: center;
-      color: #ff0ea0;
-      margin-bottom: 2rem;
-    }
-    .subsections {
-  display: none;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-    .subsections button {
-      background-color: #ff0ea0;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .subsection-content {
-      display: none;
-    }
-    .subsection-content.active {
-      display: block;
-    }
-    .logout-button {
-      margin-top: 2rem;
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-    .logout-button button {
-      width: auto;
-      padding: 0.3rem 0.6rem;
-      font-size: 1rem;
-      background-color: crimson;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .delete-button-inline {
-      padding: 0.3rem 0.6rem;
-      font-size: 1rem;
-      background-color: #555;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    footer.footer {
-      background: none;
-      padding: 1rem;
-    }
-    footer.footer p {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #555;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      padding: 0.5rem 1rem;
-    }
-    nav button {
-    background-color: #888888;
-    color: white;
-    font-size: 1.1rem;
-    padding: 0.6rem 1.2rem;
-    margin: 0.5rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-</style>
-  <script>
-    function toggleCamgirlSection() {
-      document.getElementById('camgirl').classList.toggle('active');
+    .tools.active { display: block; }
+
+    .card {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      max-width: 1000px;
+      margin: 1rem auto;
     }
 
-    function showSubsection(id) {
-  const all = document.querySelectorAll('.subsection-content');
-  all.forEach(el => el.style.display = 'none');
+    h2.section-title { text-align: center; color: var(--accent); margin: 0 0 1rem 0; }
 
-  const current = document.getElementById(id);
-  if (current) {
-    current.style.display = 'block';
-  }
-}
-  function stergeContUtilizatoare() {
-  const confirmare = confirm('Ești sigură că vrei să renunți la acest cont? Această acțiune este ireversibilă.');
-  if (confirmare) {
-    alert('Contul tău a fost șters.');
-    // TODO: Aici se va adăuga logica reală de ștergere din baza de date / sistem
-    // Exemplu: redirectare sau ștergere din localStorage
-    // localStorage.clear();
-    // window.location.href = '/';
-  }
-}
+    .btn { background: var(--accent); color: #fff; padding: 0.7rem 1.2rem; border: 0; border-radius: 8px; cursor: pointer; font-weight: 700; }
+    .btn.ok { background: var(--ok); }
+    .btn.danger { background: var(--danger); }
 
-function showSection(id) {
-  hideAllSections();
+    /* Sub-secțiuni (doar în Spațiu cam girl) */
+    .subsections { display: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; max-width: 1000px; margin: 0 auto 1rem auto; }
+    .subsections button { background: var(--accent); color: #fff; border: 0; padding: 0.5rem 0.8rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-  const section = document.getElementById(id);
-  if (section) section.classList.add('active');
+    .subsection-content { display: none; }
+    .subsection-content.active { display: block; }
 
-  const subsections = document.querySelector('.subsections');
-  if (subsections) {
-    subsections.style.display = (id === 'spatiucamgirl') ? 'grid' : 'none';
-  }
-}
-function autentificareUtilizatoare(event) {
-  event.preventDefault();
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const mesaj = document.getElementById('loginMessage');
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: var(--accent); color: #fff; }
+    th, td { padding: 0.7rem; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
 
-  const conturi = JSON.parse(localStorage.getItem('conturi_camgirl') || '[]');
-  const user = conturi.find(u => u.username === username && u.parola === password);
+    /* Aliniere tabele în subsecțiunea Prețuri */
+    #preturi table colgroup col:nth-child(1){ width:35%; }
+    #preturi table colgroup col:nth-child(2){ width:45%; }
+    #preturi table colgroup col:nth-child(3){ width:20%; }
+    #preturi table th:nth-child(1), #preturi table td:nth-child(1){ text-align:left; }
+    #preturi table th:nth-child(2), #preturi table td:nth-child(2){ text-align:center; }
+    #preturi table th:nth-child(3), #preturi table td:nth-child(3){ text-align:right; }
 
-  if (user) {
-    localStorage.setItem('nume_utilizator', username);
-    mesaj.style.color = 'green';
-    mesaj.textContent = 'Autentificare reușită!';
-    document.querySelector('.subsections').style.display = 'grid';
-    document.getElementById('loginForm').style.display = 'none';
-  } else {
-    mesaj.style.color = 'crimson';
-    mesaj.textContent = 'Username sau parolă incorecte!';
-  }
-  return false;
-}
-function salveazaContNou(event) {
-  event.preventDefault();
-  const username = document.getElementById('username').value.trim();
-  const parola = document.getElementById('parola').value;
-  const reparola = document.getElementById('reparola').value;
+    footer { padding: 3rem 1rem 1rem; text-align: center; font-size: 0.9rem; color: #666; }
 
-  if (parola !== reparola) {
-    alert('Parolele nu coincid!');
-    return false;
-  }
+    /* Preview Pagina */
+    #paginaPreviewWrap { max-width: 1000px; margin: 0 auto; }
+    #paginaPreview { width: 100%; border: 1px solid #e5e5e5; border-radius: 12px; height: 380px; }
+  </style>
 
-  const conturi = JSON.parse(localStorage.getItem('conturi_camgirl') || '[]');
-  if (conturi.find(c => c.username === username)) {
-    alert('Acest username este deja folosit.');
-    return false;
-  }
-
-  conturi.push({ username, parola });
-  localStorage.setItem('conturi_camgirl', JSON.stringify(conturi));
-  alert('Contul a fost creat cu succes! Acum te poți autentifica.');
-  document.getElementById('username').value = '';
-  document.getElementById('parola').value = '';
-  document.getElementById('reparola').value = '';
-  return false;
-}
-</script>
-
-  <script>
-function toggleAsistentaSection() {
-  hideAllSections();
-
-  const asistenta = document.getElementById('asistenta');
-  if (asistenta) asistenta.classList.add('active');
-
-  const subsections = document.querySelector('.subsections');
-  if (subsections) subsections.style.display = 'none';
-}
-function hideAllSections() {
-  document.querySelectorAll('.tools').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.subsection-content').forEach(el => el.classList.remove('active'));
-}
-</script>
-<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js">
-function logoutUtilizatoare() {
-  localStorage.removeItem('nume_utilizator');
-
-  // Ascunde toate subsecțiunile și secțiunile active
-  const subsections = document.querySelector('.subsections');
-  if (subsections) subsections.style.display = 'none';
-
-  document.querySelectorAll('.subsection-content').forEach(el => {
-    el.classList.remove('active');
-    el.style.display = 'none';
-  });
-
-  hideAllSections();
-
-  // Afișează formularul de autentificare și activează secțiunea spatiucamgirl
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) loginForm.style.display = 'flex';
-
-  const spatiuCamGirl = document.getElementById('spatiucamgirl');
-  if (spatiuCamGirl) {
-    spatiuCamGirl.classList.add('active');
-    window.scrollTo({ top: spatiuCamGirl.offsetTop, behavior: 'smooth' });
-  }
-}
-</script>
+  <!-- CKEditor 4: doar pentru editorul din subsecțiunea „Pagina” -->
+  <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
 </head>
 <body>
-  
   <header>
     <h1>VIDEOCHAT ROMÂNIA</h1>
     <nav>
-      <button onclick="showSection('femei')">Femei</button>
-      <button onclick="showSection('trans')">Trans</button>
-      <button onclick="showSsection('video')">video</button>
-      <button onclick="showSection('devino')">Devino</button>
-      <button onclick="showSection('spatiucamgirl')">Spatiu cam girl</button>
-      <button onclick="toggleAsistentaSection()">Asistenta</button>
+      <button data-section="femei">Femei</button>
+      <button data-section="trans">Trans</button>
+      <button data-section="video">Video</button>
+      <button data-section="creeazacont">Creează cont</button>
+      <button data-section="spatiucamgirl">Spațiu cam girl</button>
     </nav>
   </header>
 
-  
-  
-    
-<div style="margin-top: 3.5rem;"></div>
+  <!-- SECTIUNI TOP-LEVEL (publice) -->
+  <section id="femei" class="tools">
+    <div class="card"><h2 class="section-title">Femei</h2><p>Conținut public pentru secțiunea Femei (liste, preview profile, etc.).</p></div>
+  </section>
 
-<div id="spatiucamgirl" class="tools">
-  <h2 style="text-align:center; color:#ff0ea0;">Autentificare utilizatoare</h2>
-  <form id="loginForm" onsubmit="return autentificareUtilizatoare(event)" style="max-width: 400px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 1rem;">
-    <input type="text" id="loginUsername" placeholder="Username" required style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;">
-    <input type="password" id="loginPassword" placeholder="Parolă" required style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;">
-    <button type="submit" style="background-color: #28a745; color: white; padding: 0.6rem 1rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Autentifică-te</button>
-    <div id="loginMessage" style="color: crimson; text-align: center;"></div>
-  </form>
-</div>
+  <section id="trans" class="tools">
+    <div class="card"><h2 class="section-title">Trans</h2><p>Conținut public pentru secțiunea Trans.</p></div>
+  </section>
 
-<div id="devino" class="tools">
-  <h2 style="text-align: center; color: #ff0ea0;">Înregistrare Cam Girl</h2>
-  <form onsubmit="return salveazaContNou(event)" style="max-width: 600px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <table style="width: 100%; border-collapse: separate; border-spacing: 0 1rem;">
-      <tr>
-        <td><label for="nume">Nume:</label></td>
-        <td><input type="text" id="nume" name="nume" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></td>
-      </tr>
-      <tr>
-        <td><label for="prenume">Prenume:</label></td>
-        <td><input type="text" id="prenume" name="prenume" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></td>
-      </tr>
-      <tr>
-        <td><label for="username">Username:</label></td>
-        <td><input type="text" id="username" name="username" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></td>
-      </tr>
-      <tr>
-        <td><label for="email">Email:</label></td>
-        <td><input type="email" id="email" name="email" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></td>
-      </tr>
-      <tr>
-        <td><label for="parola">Parolă:</label></td>
-        <td><input type="password" id="parola" name="parola" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></td>
-      </tr>
-      <tr>
-        <td><label for="reparola">Repetă parola:</label></td>
-        <td><input type="password" id="reparola" name="reparola" required style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></td>
-      </tr>
-    </table>
-    <div style="text-align: center; margin-top: 2rem;">
-      <button type="submit" style="background-color: #28a745; color: white; padding: 0.6rem 1.5rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Înregistrează-te</button>
-    </div>
-  </form>
-</div>
-<div class="subsections">
-  <button onclick="showSubsection('pagina')">Pagina</button>
-      <button onclick="showSubsection('preturi')">Preturi</button>
-      <button onclick="showSubsection('foto')">Foto</button>
-      <button onclick="showSubsection('videoPlata')">Video cu plată</button>
-      <button onclick="showSubsection('plati')">Plăți</button>
-      <button onclick="showSubsection('retrageri')">Retrageri</button>
-      <button onclick="showSubsection('documente')">Documente</button>
-      <button onclick="showSubsection('mesaje')">Mesaje</button>
-      <button onclick="showSubsection('recenzii')">Recenzii</button>
-      <button onclick="showSubsection('dateRetragere')">Date de retragere</button>
-      <button onclick="showSubsection('statistici')">Statistici</button>
-      <button onclick="showSubsection('logout')">Logout</button>
-  <button onclick="showSubsection('stergecont')">Sterge cont</button>
-</div>
+  <section id="video" class="tools">
+    <div class="card"><h2 class="section-title">Video</h2><p>Galerie/video publice sau trailere.</p></div>
+  </section>
 
-    <div id="pagina" class="subsection-content">
-  <div class="custom-page-wrapper" style="max-width: 900px; margin: auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0; margin-bottom: 1.5rem;">✨ Creează-ți pagina ta specială ✨</h2>
-
-    <form id="paginaForm">
-      <div style="display: flex; flex-direction: column; gap: 1rem;">
-        <textarea id="descriere" name="descriere" rows="10" placeholder="Poți scrie aici conținut HTML, CSS, JavaScript..." style="padding: 0.8rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px;"></textarea>
-<script>CKEDITOR.replace('descriere');</script>
-
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-          <label>Culoare fundal:</label>
-          <input type="color" id="culoareFundal" value="#ffffff">
-
-          <label>Culoare text:</label>
-          <input type="color" id="culoareText" value="#000000">
-        </div>
-
-        
-
-        
+  <section id="creeazacont" class="tools">
+    <div class="card">
+      <h2 class="section-title">Creează cont</h2>
+      <p>Conturile sunt stocate local pentru demo.</p>
+      <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="btn ok" type="button" onclick="demoCreareCont()">Creează cont demo local</button>
+        <button class="btn" type="button" onclick="showSection('spatiucamgirl')">Ai deja cont? Autentifică-te</button>
       </div>
-    <button type="button" onclick="salveazaPrezentare()" class="add-price-button" style="margin-top: 2rem; background-color: #28a745;">Salvează Pagina</button>
-</form>
-<div class="custom-contact-form" style="max-width: 900px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <form style="display: flex; flex-direction: column; gap: 1rem;">
-    <select style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-  <option value="">Selectează o națiune</option>
-  <option value="România">România</option>
-  <option value="Moldova">Moldova</option>
-  <option value="Italia">Italia</option>
-  <option value="Spania">Spania</option>
-  <option value="Germania">Germania</option>
-  <option value="Franța">Franța</option>
-  <option value="Regatul Unit">Regatul Unit</option>
-  <option value="SUA">SUA</option>
-  <option value="Canada">Canada</option>
-  <option value="Ucraina">Ucraina</option>
-  <option value="Grecia">Grecia</option>
-  <option value="Ungaria">Ungaria</option>
-  <option value="Bulgaria">Bulgaria</option>
-  <option value="Austria">Austria</option>
-  <option value="Elveția">Elveția</option>
-  <option value="Belgia">Belgia</option>
-  <option value="Olanda">Olanda</option>
-  <option value="Norvegia">Norvegia</option>
-  <option value="Suedia">Suedia</option>
-  <option value="Danemarca">Danemarca</option>
-  <option value="Portugalia">Portugalia</option>
-  <option value="Cehia">Cehia</option>
-  <option value="Slovacia">Slovacia</option>
-  <option value="Polonia">Polonia</option>
-  <option value="Brazilia">Brazilia</option>
-  <option value="Mexic">Mexic</option>
-  <option value="Argentina">Argentina</option>
-  <option value="Columbia">Columbia</option>
-  <option value="Australia">Australia</option>
-  <option value="Noua Zeelandă">Noua Zeelandă</option>
-  <option value="Japonia">Japonia</option>
-  <option value="Coreea de Sud">Coreea de Sud</option>
-  <option value="China">China</option>
-  <option value="India">India</option>
-  <option value="Africa de Sud">Africa de Sud</option>
-  <option value="Altă">Altă</option>
-  <option value="Letonia">Letonia</option>
-  <option value="Lituania">Lituania</option>
-  <option value="Estonia">Estonia</option>
-  <option value="Islanda">Islanda</option>
-  <option value="Irlanda">Irlanda</option>
-  <option value="Luxemburg">Luxemburg</option>
-  <option value="Monaco">Monaco</option>
-  <option value="Liechtenstein">Liechtenstein</option>
-  <option value="Slovenia">Slovenia</option>
-  <option value="Malta">Malta</option>
-  <option value="Muntenegru">Muntenegru</option>
-  <option value="Bosnia și Herțegovina">Bosnia și Herțegovina</option>
-  <option value="Kosovo">Kosovo</option>
-  <option value="Andorra">Andorra</option>
-  <option value="San Marino">San Marino</option>
-  <option value="Vatican">Vatican</option>
-</select>
-    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-  <label style="font-weight: bold;">Limbi vorbite</label>
-  <label><input type="checkbox" name="limbi" value="Română"> Română</label>
-  <label><input type="checkbox" name="limbi" value="Italiană"> Italiană</label>
-  <label><input type="checkbox" name="limbi" value="Spaniolă"> Spaniolă</label>
-  <label><input type="checkbox" name="limbi" value="Germană"> Germană</label>
-  <label><input type="checkbox" name="limbi" value="Franceză"> Franceză</label>
-  <label><input type="checkbox" name="limbi" value="Engleză"> Engleză</label>
-</div>
-        <input type="text" placeholder="Contact Telegram" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" placeholder="Facebook" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" placeholder="Instagram" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" placeholder="X (fost Twitter)" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" placeholder="WhatsApp" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" placeholder="Discord" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="email" placeholder="Email public" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-    <input type="text" placeholder="Link invitație Teams" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-        <button type="submit" style="background-color: #28a745; color: white; padding: 0.6rem 1rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; width: auto;">Salvează Contactele</button>
-  </form>
-</div>
-</div>
-<script>
-  function genereazaPrezentare() {
-    const titlu = document.getElementById('titlu').value;
-    const descriere = CKEDITOR.instances.descriere.getData();
-    const fundal = document.getElementById('culoareFundal').value;
-    const text = document.getElementById('culoareText').value;
-    const output = document.getElementById('outputPagina');
-    }
-
-  function salveazaPrezentare() {
-    const descriere = CKEDITOR.instances.descriere.getData();
-    const fundal = document.getElementById('culoareFundal').value;
-    const text = document.getElementById('culoareText').value;
-    localStorage.setItem('pagina_descriere', descriere);
-    localStorage.setItem('pagina_fundal', fundal);
-    localStorage.setItem('pagina_text', text);
-    alert('Pagina a fost salvată cu succes!');
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('pagina_descriere')) {
-      CKEDITOR.instances.descriere.setData(localStorage.getItem('pagina_descriere'));
-      document.getElementById('culoareFundal').value = localStorage.getItem('pagina_fundal') || '#ffffff';
-      document.getElementById('culoareText').value = localStorage.getItem('pagina_text') || '#000000';
-      genereazaPrezentare();
-    }
-  });
-</script>
-
-
-      
     </div>
-    <!-- Poți adăuga mai multe carduri identice aici pentru mai multe oferte -->
-  </div>
-</div>
-<div id="logout" class="subsection-content">
-  <script>
-    logoutUtilizatoare();
-  </script>
-</div>
-</div>
-<div id="preturi" class="subsection-content"></div>
-    </form>
-  </div>
-</div>
-</div>
+  </section>
 
-<div id="foto" class="subsection-content">
-  <div style="max-width: 900px; margin: auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0;">📸 Încarcă Fotografii</h2>
-    <form id="uploadForm" style="display: flex; flex-direction: column; gap: 1rem;">
-      <input type="file" accept="image/*" multiple style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;">
-      <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; align-self: center; font-size: 1rem;">Încarcă</button>
+  <!-- SPAȚIU CAM GIRL (autentificare + dashboard) -->
+  <section id="spatiucamgirl" class="tools">
+    <h2 class="section-title">Autentificare utilizatoare</h2>
+    <!-- Login form -->
+    <form id="loginForm" class="card" onsubmit="return autentificareUtilizatoare(event)" style="display:flex;flex-direction:column;gap:0.8rem;max-width:420px;">
+      <input type="text" id="loginUsername" placeholder="Username" required style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;" />
+      <input type="password" id="loginPassword" placeholder="Parolă" required style="padding:0.6rem;border-radius:8px;border:1px solid #ccc;" />
+      <button class="btn ok" type="submit">Autentifică-te</button>
+      <div id="loginMessage" style="text-align:center;font-weight:700;"></div>
+      <div style="text-align:center;opacity:.8;font-size:.9rem;">Apasă <kbd>Alt</kbd> + <kbd>D</kbd> pentru a crea rapid un cont demo local.</div>
     </form>
-  </div>
-</div>
-  </div>
-</div>
+
+    <!-- SUBSECTIUNI (vizibile doar după login) -->
+    <div class="subsections" id="subsections">
+      <button data-sub="pagina">Pagina</button>
+      <button data-sub="preturi">Prețuri</button>
+      <button data-sub="foto">Foto</button>
+      <button data-sub="videoPlata">Video cu plată</button>
+      <button data-sub="plati">Plăți</button>
+      <button data-sub="retrageri">Retrageri</button>
+      <button data-sub="documente">Documente</button>
+      <button data-sub="mesaje">Mesaje</button>
+      <button data-sub="recenzii">Recenzii</button>
+      <button data-sub="dateRetragere">Date de retragere</button>
+      <button data-sub="statistici">Statistici</button>
+      <button data-sub="logout">Logout</button>
+      <button data-sub="stergecont">Șterge cont</button>
+    </div>
+
+    <!-- CONTINUT SUBSECTIUNI -->
+    <div id="pagina" class="subsection-content">
+      <div class="card">
+        <h3 class="section-title" style="margin-bottom:1rem;">✨ Creează-ți pagina ta specială ✨</h3>
+        <form id="paginaForm" onsubmit="return false;" style="display:flex;flex-direction:column;gap:1rem;">
+          <textarea id="descriere" rows="10" placeholder="Poți scrie aici conținut HTML, CSS, JavaScript..." style="padding:0.8rem;font-size:1rem;border:1px solid #ccc;border-radius:8px;"></textarea>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+            <label>Culoare fundal <input type="color" id="culoareFundal" value="#ffffff" /></label>
+            <label>Culoare text <input type="color" id="culoareText" value="#000000" /></label>
+          </div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+            <button type="button" class="btn" onclick="renderPaginaPreview()">Previzualizează</button>
+            <button type="button" class="btn ok" onclick="salveazaPrezentare()">Salvează pagina</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="paginaPreviewWrap" class="card">
+        <h4 class="section-title" style="font-size:1.1rem;margin-top:0;">🔎 Previzualizare live</h4>
+        <iframe id="paginaPreview" sandbox="allow-scripts allow-same-origin"></iframe>
+      </div>
+
+      <div class="card">
+        <form id="contacteForm" style="display:flex;flex-direction:column;gap:0.7rem;">
+          <select id="natiune" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;">
+            <option value="">Selectează o națiune</option>
+            <option>România</option><option>Moldova</option><option>Italia</option><option>Spania</option><option>Germania</option><option>Franța</option><option>Regatul Unit</option><option>SUA</option><option>Canada</option><option>Ucraina</option><option>Grecia</option><option>Ungaria</option><option>Bulgaria</option><option>Austria</option><option>Elveția</option><option>Belgia</option><option>Olanda</option><option>Norvegia</option><option>Suedia</option><option>Danemarca</option><option>Portugalia</option><option>Cehia</option><option>Slovacia</option><option>Polonia</option><option>Brazilia</option><option>Mexic</option><option>Argentina</option><option>Columbia</option><option>Australia</option><option>Noua Zeelandă</option><option>Japonia</option><option>Coreea de Sud</option><option>China</option><option>India</option><option>Africa de Sud</option><option>Altă</option><option>Letonia</option><option>Lituania</option><option>Estonia</option><option>Islanda</option><option>Irlanda</option><option>Luxemburg</option><option>Monaco</option><option>Liechtenstein</option><option>Slovenia</option><option>Malta</option><option>Muntenegru</option><option>Bosnia și Herțegovina</option><option>Kosovo</option><option>Andorra</option><option>San Marino</option><option>Vatican</option>
+          </select>
+
+          <div>
+            <strong>Limbi vorbite</strong>
+            <div style="display:grid;grid-template-columns:repeat(3, minmax(0,1fr));gap:0.25rem;margin-top:0.25rem;">
+              <label><input type="checkbox" name="limbi" value="Română" /> Română</label>
+              <label><input type="checkbox" name="limbi" value="Italiană" /> Italiană</label>
+              <label><input type="checkbox" name="limbi" value="Spaniolă" /> Spaniolă</label>
+              <label><input type="checkbox" name="limbi" value="Germană" /> Germană</label>
+              <label><input type="checkbox" name="limbi" value="Franceză" /> Franceză</label>
+              <label><input type="checkbox" name="limbi" value="Engleză" /> Engleză</label>
+            </div>
+          </div>
+
+          <input type="text" id="tg" placeholder="Contact Telegram" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="text" id="fb" placeholder="Facebook" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="text" id="ig" placeholder="Instagram" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="text" id="x" placeholder="X (fost Twitter)" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="text" id="wa" placeholder="WhatsApp" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="text" id="dc" placeholder="Discord" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="email" id="pubmail" placeholder="Email public" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <input type="text" id="teams" placeholder="Link invitație Teams" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;" />
+          <div><button type="button" class="btn ok" onclick="salveazaContacte()">Salvează contactele</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div id="preturi" class="subsection-content">
+      <div class="card">
+        <h3 class="section-title">Prețuri</h3>
+        <div id="serviciiForm"><button class="btn" type="button" onclick="adaugaServiciu()">Adaugă serviciu</button> <button id="saveLastBtn" class="btn ok" type="button" style="display:none;margin-left:0.5rem;" onclick="saveLastServiciu()">Salvează serviciul curent</button></div>
+        <div style="margin-top:1rem;">
+          <h4 class="section-title" style="font-size:1.1rem">Servicii salvate</h4>
+          <table style="width:100%;border-collapse:collapse;">
+            <colgroup>
+              <col />
+              <col />
+              <col />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Titlu</th>
+                <th>Descriere</th>
+                <th>Preț (€)</th>
+                <th>Acțiuni</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-servicii"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div id="foto" class="subsection-content">
+      <div class="card">
+        <h3 class="section-title">📸 Încarcă fotografii</h3>
+        <form id="uploadForm" onsubmit="event.preventDefault(); alert('Mock upload local.');" style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;">
+          <input type="file" accept="image/*" multiple />
+          <button class="btn ok" type="submit">Încarcă</button>
+        </form>
+      </div>
+    </div>
+
     <div id="videoPlata" class="subsection-content">
-  <div style="max-width: 900px; margin: auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0;">🎥 Încarcă Video cu Plată</h2>
-    <form id="uploadVideoForm" style="display: flex; flex-direction: column; gap: 1rem;">
-      <input type="file" accept="video/*" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;">
-      <input type="text" placeholder="Descriere video" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-      <input type="text" placeholder="Durată (ex: 10 minute)" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-      <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; align-self: center; font-size: 1rem;">Încarcă Video</button>
-    </form>
-  </div>
-</div>
+      <div class="card">
+        <h3 class="section-title">🎥 Încarcă video cu plată</h3>
+        <form id="uploadVideoForm" onsubmit="event.preventDefault(); alert('Mock upload local.');" style="display:grid;gap:0.7rem;">
+          <input type="file" accept="video/*" />
+          <input type="text" placeholder="Descriere video" />
+          <input type="text" placeholder="Durată (ex: 10 minute)" />
+          <button class="btn ok" type="submit">Încarcă video</button>
+        </form>
+      </div>
+    </div>
+
     <div id="plati" class="subsection-content">
-  <div style="max-width: 1000px; margin: auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0;">📑 Istoric Plăți</h2>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-      <thead style="background-color: #ff0ea0; color: white;">
-        <tr>
-          <th style="padding: 0.75rem; text-align: left;">Data</th>
-          <th style="padding: 0.75rem; text-align: left;">Ora</th>
-          <th style="padding: 0.75rem; text-align: left;">Sumă</th>
-          <th style="padding: 0.75rem; text-align: left;">Tip (Show / Video)</th>
-        </tr>
-      </thead>
-      
-          <tr>
-            <td>2025-07-27</td>
-            <td>14:32</td>
-            <td>50 EUR</td>
-            <td>Show <button onclick="returneazaPlata(this)" style="margin-left: 1rem; background-color: crimson; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 4px; cursor: pointer;">Rambursează</button></td>
-          </tr>
-        <!-- Rânduri de plăți vor fi inserate aici -->
-                <tr>
-            <td>100 EUR</td>
-            <td>2025-07-27</td>
-            <td>2025-07-28</td>
-            <td>Transfer bancar</td>
-          </tr>
+      <div class="card">
+        <h3 class="section-title">📑 Istoric plăți</h3>
+        <table id="tabel-plati">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Model</th>
+              <th>Sumă</th>
+              <th>Tip (Show / Video / Foto / Cadou)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Exemple corecte pentru parserul de statistici -->
+            <tr>
+              <td>2025-07-27 14:32</td>
+              <td>Andreea</td>
+              <td>50 EUR</td>
+              <td>Show <button class="btn danger" style="padding:0.2rem 0.5rem;margin-left:0.4rem;" onclick="returneazaPlata(this)">Rambursează</button></td>
+            </tr>
+            <tr>
+              <td>2025-07-28 09:10</td>
+              <td>Andreea</td>
+              <td>25 EUR</td>
+              <td>Video</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-  </div>
-</div>
-     
-    <button onclick="adaugaRetragere()" style="background-color: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; display: block; margin: 1rem auto 2rem auto;">Solicită Retragere</button>
-    <h2 style="text-align: center; color: #ff0ea0;">💸 Istoric Retrageri</h2>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-      <thead style="background-color: #ff0ea0; color: white;">
-        <tr>
-          <th style="padding: 0.75rem; text-align: left;">Sumă retrasă</th>
-          <th style="padding: 0.75rem; text-align: left;">Data cererii</th>
-          <th style="padding: 0.75rem; text-align: left;">Data executării</th>
-          <th style="padding: 0.75rem; text-align: left;">Modalitate</th>
-        </tr>
-      </thead>
-      <tbody id="retrageri-body">
-        <!-- Rânduri de retrageri vor fi adăugate aici -->
-      </tbody>
-    </table>
-  </div>
-</div>
+    <div id="retrageri" class="subsection-content">
+      <div class="card">
+        <button class="btn ok" type="button" onclick="adaugaRetragere()" style="display:block;margin:0 auto 1rem;">Solicită retragere</button>
+        <h3 class="section-title">💸 Istoric retrageri</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Sumă retrasă</th>
+              <th>Data cererii</th>
+              <th>Data executării</th>
+              <th>Modalitate</th>
+            </tr>
+          </thead>
+          <tbody id="retrageri-body"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div id="documente" class="subsection-content">
-  <div style="max-width: 900px; margin: auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0;">📎 Încarcă Documente</h2>
+      <div class="card">
+        <h3 class="section-title">📎 Încarcă documente</h3>
+        <form id="uploadDocsForm" enctype="multipart/form-data" style="display:grid;gap:0.6rem;">
+          <label for="pdfUpload">Fișiere PDF</label>
+          <input type="file" id="pdfUpload" accept="application/pdf" multiple />
+          <label for="imgUpload">Fotografii</label>
+          <input type="file" id="imgUpload" accept="image/*" multiple />
+          <button class="btn ok" type="submit">Încarcă documentele</button>
+        </form>
+        <div id="previewDocs" style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+      </div>
+    </div>
 
-    <form id="uploadDocsForm" style="display: flex; flex-direction: column; gap: 1rem;" enctype="multipart/form-data">
-      <label for="pdfUpload">Fișiere PDF:</label>
-      <input type="file" id="pdfUpload" accept="application/pdf" multiple style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;">
-
-      <label for="imgUpload">Fotografii:</label>
-      <input type="file" id="imgUpload" accept="image/*" multiple style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;">
-
-      <button type="submit" style="background-color: #28a745; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; align-self: center; font-size: 1rem;">Încarcă Documentele</button>
-    </form>
-
-    <div id="previewDocs" style="margin-top: 1rem;"></div>
-  </div>
-</div>
-<script>
-  document.getElementById('uploadDocsForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const preview = document.getElementById('previewDocs');
-    preview.innerHTML = '';
-
-    const files = [...document.getElementById('pdfUpload').files, ...document.getElementById('imgUpload').files];
-
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const el = document.createElement(file.type.includes('image') ? 'img' : 'a');
-        if (file.type.includes('image')) {
-          el.src = event.target.result;
-          el.style.maxWidth = '200px';
-          el.style.margin = '0.5rem';
-        } else {
-          el.href = event.target.result;
-          el.textContent = file.name;
-          el.target = '_blank';
-          el.style.display = 'block';
-          el.style.margin = '0.5rem 0';
-        }
-        preview.appendChild(el);
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-</script>
-    <div id="mesaje" class="subsection-content">Conținut pentru Mesaje</div>
-    <div id="recenzii" class="subsection-content">Conținut pentru Recenzii</div>
+    <div id="mesaje" class="subsection-content"><div class="card">Conținut pentru Mesaje</div></div>
+    <div id="recenzii" class="subsection-content"><div class="card">Conținut pentru Recenzii</div></div>
 
     <div id="statistici" class="subsection-content">
-  <div style="text-align: center; margin: 2rem auto;">
-    <button onclick="stergeContUtilizatoare()" style="background-color: crimson; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 1rem; cursor: pointer;">Șterge Contul</button>
-  </div>
-  <div style="max-width: 1000px; margin: auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0;">📊 Statistici</h2>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
-      <thead style="background-color: #ff0ea0; color: white;">
-        <tr>
-          <th style="padding: 0.75rem; text-align: left;">Luna</th>
-          <th style="padding: 0.75rem; text-align: left;">Show (Nr)</th>
-          <th style="padding: 0.75rem; text-align: left;">Show (€)</th>
-          <th style="padding: 0.75rem; text-align: left;">Video (Nr)</th>
-          <th style="padding: 0.75rem; text-align: left;">Video (€)</th>
-          <th style="padding: 0.75rem; text-align: left;">Foto (€)</th>
-          <th style="padding: 0.75rem; text-align: left;">Cadouri (Nr)</th>
-          <th style="padding: 0.75rem; text-align: left;">Cadouri (€)</th>
-          <th style="padding: 0.75rem; text-align: left;">Total (€)</th>
-          <th style="padding: 0.75rem; text-align: left;">Show Mediu (€)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Iulie 2025</td>
-          <td>20</td>
-          <td>400</td>
-          <td>5</td>
-          <td>125</td>
-          <td>50</td>
-          <td>10</td>
-          <td>75</td>
-          <td>650</td>
-          <td>20.00</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-
-      
+      <div class="card">
+        <h3 class="section-title">📊 Statistici</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Luna</th>
+              <th>Show (Nr)</th>
+              <th>Show (€)</th>
+              <th>Video (Nr)</th>
+              <th>Video (€)</th>
+              <th>Foto (€)</th>
+              <th>Cadouri (Nr)</th>
+              <th>Cadouri (€)</th>
+              <th>Total (€)</th>
+              <th>Show Mediu (€)</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-statistici">
+            <!-- Completat dinamic -->
+          </tbody>
+        </table>
+      </div>
     </div>
-  <div id="dateRetragere" class="subsection-content">
-  <div style="max-width: 800px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <h2 style="text-align: center; color: #ff0ea0;">💳 Completează Datele Bancare</h2>
-    
-      <input type="text" placeholder="Nume complet" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-      <input type="text" placeholder="IBAN / Cont bancar" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-      
-<input type="text" placeholder="BIC / SWIFT" style="padding: 0.5rem; border-radius: 5px; border: 1px solid #ccc;">
-            <button type="submit" style="background-color: #28a745; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; align-self: center;">Salvează Datele Bancare</button>
-    </form>
-  </div>
-</div>
-</div>
 
+    <div id="dateRetragere" class="subsection-content">
+      <div class="card">
+        <h3 class="section-title">💳 Completează datele bancare</h3>
+        <form id="bancarForm" onsubmit="event.preventDefault(); alert('Date bancare salvate local.');" style="display:grid;gap:0.6rem;max-width:600px;margin:0 auto;">
+          <input type="text" id="numeComplet" placeholder="Nume complet" />
+          <input type="text" id="iban" placeholder="IBAN / Cont bancar" />
+          <input type="text" id="swift" placeholder="BIC / SWIFT" />
+          <button class="btn ok" type="submit">Salvează datele bancare</button>
+        </form>
+      </div>
+    </div>
 
-  <footer class="footer">
+    <div id="logout" class="subsection-content">
+      <div class="card" style="text-align:center;">
+        <p>Apasă pe buton pentru a ieși din cont.</p>
+        <button class="btn danger" type="button" onclick="logoutUtilizatoare()">Logout</button>
+      </div>
+    </div>
+
+    <div id="stergecont" class="subsection-content">
+      <div class="card" style="text-align:center;">
+        <p>Ștergerea contului va elimina datele stocate local.</p>
+        <button class="btn danger" type="button" onclick="stergeContUtilizatoare()">Șterge contul</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
     <p>&copy; 2025 Videochat România. Toate drepturile rezervate.</p>
   </footer>
 
-<div id="asistenta" class="tools">
-  <h2 style="text-align:center; color:#ff0ea0;">Formular de Contact</h2>
-  <form style="max-width: 600px; margin: 2rem auto; display: flex; flex-direction: column; gap: 1rem; background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-    <input type="text" placeholder="Nume complet" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;">
-    <input type="email" placeholder="Email" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;">
-    <textarea placeholder="Mesajul tău" rows="5" style="padding: 0.5rem; border-radius: 6px; border: 1px solid #ccc;"></textarea>
-    <button type="submit" style="background-color: #28a745; color: white; padding: 0.6rem 1rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Trimite Mesajul</button>
-  </form>
-</div>
-<script>
-  function returneazaPlata(button) {
-    const confirmare = confirm('Ești sigur că vrei să rambursezi această plată?');
-    if (confirmare) {
-      const rand = button.closest('tr');
-      rand.style.textDecoration = 'line-through';
-      alert('Plata a fost marcată ca rambursată.');
+  <script>
+    // ===== UTIL =====
+    function qs(sel, root=document){ return root.querySelector(sel); }
+    function qsa(sel, root=document){ return [...root.querySelectorAll(sel)]; }
+
+    // ===== NAV SECTIONS =====
+    function hideAllSections(){ qsa('.tools').forEach(el => el.classList.remove('active')); }
+    function showSection(id){
+      hideAllSections();
+      const section = qs('#' + id);
+      if(section){ section.classList.add('active'); }
+
+      const logged = !!localStorage.getItem('nume_utilizator');
+      const subs = qs('#subsections');
+      const loginForm = qs('#loginForm');
+      if(id === 'spatiucamgirl'){
+        if(subs) subs.style.display = logged ? 'grid' : 'none';
+        if(loginForm) loginForm.style.display = logged ? 'none' : 'flex';
+        if(logged){
+          const last = localStorage.getItem('last_sub') || 'pagina';
+          showSubsection(last);
+          if(last === 'pagina') initCKE();
+        }
+      } else {
+        if(subs) subs.style.display = 'none';
+        if(loginForm) loginForm.style.display = 'none';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }
-</script>
-<script>
-function adaugaRetragere() {
-  const tbody = document.getElementById('retrageri-body');
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>-- EUR</td>
-    <td>${new Date().toISOString().split('T')[0]}</td>
-    <td>--</td>
-    <td><select>
-          <option value="">Selectează</option>
-          <option>Transfer bancar</option>
-          <option>Revolut</option>
-          <option>PayPal</option>
-          <option>Crypto</option>
-        </select></td>`;
-  tbody.appendChild(tr);
-}
-function actualizeazaStatistici() {
-  const numeUtilizatorAutentificat = localStorage.getItem('nume_utilizator') || 'Andreea';
-  const rows = document.querySelectorAll('#plati table tbody tr');
-  const statistici = {};
 
-  rows.forEach(row => {
-    const cells = row.querySelectorAll('td');
-    if (cells.length < 5) return;
+    // ===== SUBSECTIONS (only inside Spațiu cam girl) =====
+    function hideAllSubsections(){ qsa('.subsection-content').forEach(el => el.classList.remove('active')); }
+    function showSubsection(id){
+      hideAllSubsections(); const el = qs('#' + id); if(el){ el.classList.add('active'); }
+      localStorage.setItem('last_sub', id);
+    }
 
-    const dataText = cells[0].textContent.trim();
-    const model = cells[1].textContent.trim();
-    const sumaText = cells[2].textContent.replace(/[^0-9.,]/g, '').replace(',', '.');
-    const tipText = cells[3].textContent.toLowerCase();
+    // ===== AUTH =====
+    function autentificareUtilizatoare(ev){
+      ev.preventDefault();
+      const username = qs('#loginUsername').value.trim();
+      const password = qs('#loginPassword').value;
+      const mesaj = qs('#loginMessage');
+      const conturi = JSON.parse(localStorage.getItem('conturi_camgirl') || '[]');
+      const user = conturi.find(u => u.username === username && u.parola === password);
+      if(user){
+        localStorage.setItem('nume_utilizator', username);
+        mesaj.style.color = 'green'; mesaj.textContent = 'Autentificare reușită!';
+        qs('#loginForm').style.display = 'none';
+        qs('#subsections').style.display = 'grid';
+        const last = localStorage.getItem('last_sub') || 'pagina';
+        showSubsection(last);
+        if(last === 'pagina') initCKE();
+      } else {
+        mesaj.style.color = 'crimson'; mesaj.textContent = 'Username sau parolă incorecte!';
+      }
+      return false;
+    }
 
-    if (model !== numeUtilizatorAutentificat) return;
+    // ===== CREARE CONT (demo local) =====
+    function demoCreareCont(){
+      const u = prompt('Alege un username nou:'); if(!u) return;
+      const p = prompt('Alege o parolă:'); if(!p) return;
+      const list = JSON.parse(localStorage.getItem('conturi_camgirl') || '[]');
+      if(list.find(x=>x.username === u)) { alert('Username deja folosit.'); return; }
+      list.push({ username: u, parola: p });
+      localStorage.setItem('conturi_camgirl', JSON.stringify(list));
+      alert('Cont creat. Te poți autentifica.');
+    }
 
-    const data = new Date(dataText);
-    if (isNaN(data)) return;
+    function logoutUtilizatoare(){
+      localStorage.removeItem('nume_utilizator');
+      localStorage.removeItem('last_sub');
+      const subs = qs('#subsections'); if(subs) subs.style.display = 'none';
+      hideAllSubsections();
+      const form = qs('#loginForm'); if(form) form.style.display = 'flex';
+      // curăță previzualizarea pentru siguranță
+      const ifr = qs('#paginaPreview'); if(ifr) ifr.srcdoc = '';
+      showSection('spatiucamgirl');
+    }
 
-    const luna = data.toLocaleString('ro-RO', { month: 'long' }) + ' ' + data.getFullYear();
-    const suma = parseFloat(sumaText);
+    function stergeContUtilizatoare(){
+      if(confirm('Ești sigură că vrei să renunți la acest cont? Această acțiune este ireversibilă.')){
+        const nume = localStorage.getItem('nume_utilizator');
+        if(nume){
+          const conturi = JSON.parse(localStorage.getItem('conturi_camgirl') || '[]').filter(c => c.username !== nume);
+          localStorage.setItem('conturi_camgirl', JSON.stringify(conturi));
+        }
+        localStorage.removeItem('nume_utilizator');
+        localStorage.removeItem('last_sub');
+        alert('Contul tău a fost șters (local).');
+        showSection('spatiucamgirl');
+      }
+    }
 
-    if (!statistici[luna]) {
-      statistici[luna] = {
-        showNr: 0, showSuma: 0,
-        videoNr: 0, videoSuma: 0,
-        fotoSuma: 0,
-        cadouriNr: 0, cadouriSuma: 0
+    // ===== PAGINA: CKEditor + previzualizare + salvare =====
+    function initCKE(){ if(window.CKEDITOR && qs('#descriere') && !CKEDITOR.instances.descriere){ CKEDITOR.replace('descriere'); } }
+
+    function buildSrcDoc(html, bg, color){
+      return `<!DOCTYPE html><html><head><meta charset='utf-8'><style>html,body{height:100%;}body{margin:0;padding:16px;background:${bg};color:${color};font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}</style></head><body>${html || ''}</body></html>`;
+    }
+
+    function renderPaginaPreview(){
+      const ckeData = (window.CKEDITOR && CKEDITOR.instances.descriere) ? CKEDITOR.instances.descriere.getData() : (qs('#descriere').value || '');
+      const fundal = qs('#culoareFundal').value;
+      const text = qs('#culoareText').value;
+      const ifr = qs('#paginaPreview');
+      if(ifr){ ifr.srcdoc = buildSrcDoc(ckeData, fundal, text); }
+    }
+
+    function salveazaPrezentare(){
+      if(!window.CKEDITOR || !CKEDITOR.instances.descriere){ initCKE(); }
+      const ckeData = CKEDITOR.instances.descriere ? CKEDITOR.instances.descriere.getData() : (qs('#descriere').value || '');
+      const fundal = qs('#culoareFundal').value;
+      const text = qs('#culoareText').value;
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      localStorage.setItem('pagina_descriere_' + user, ckeData);
+      localStorage.setItem('pagina_fundal_' + user, fundal);
+      localStorage.setItem('pagina_text_' + user, text);
+      renderPaginaPreview();
+      alert('Pagina a fost salvată cu succes (local)!');
+    }
+
+    function restorePagina(){
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      const d = localStorage.getItem('pagina_descriere_' + user);
+      const f = localStorage.getItem('pagina_fundal_' + user) || '#ffffff';
+      const t = localStorage.getItem('pagina_text_' + user) || '#000000';
+      if(d && window.CKEDITOR){ if(!CKEDITOR.instances.descriere) initCKE(); if(CKEDITOR.instances.descriere){ CKEDITOR.instances.descriere.setData(d); } }
+      qs('#culoareFundal').value = f; qs('#culoareText').value = t;
+      const ifr = qs('#paginaPreview'); if(ifr){ ifr.srcdoc = buildSrcDoc(d || '', f, t); }
+    }
+
+    function salveazaContacte(){
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      const data = {
+        natiune: qs('#natiune').value,
+        limbi: qsa('input[name="limbi"]:checked').map(c=>c.value),
+        tg: qs('#tg').value, fb: qs('#fb').value, ig: qs('#ig').value,
+        x: qs('#x').value, wa: qs('#wa').value, dc: qs('#dc').value,
+        pubmail: qs('#pubmail').value, teams: qs('#teams').value
       };
+      localStorage.setItem('pagina_contacte_' + user, JSON.stringify(data));
+      alert('Contactele au fost salvate (local).');
     }
 
-    const s = statistici[luna];
-    if (tipText.includes('show')) {
-      s.showNr++;
-      s.showSuma += suma;
-    } else if (tipText.includes('video')) {
-      s.videoNr++;
-      s.videoSuma += suma;
-    } else if (tipText.includes('foto')) {
-      s.fotoSuma += suma;
-    } else if (tipText.includes('cadou')) {
-      s.cadouriNr++;
-      s.cadouriSuma += suma;
+    function restoreContacte(){
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      const raw = localStorage.getItem('pagina_contacte_' + user);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      if(data.natiune) qs('#natiune').value = data.natiune;
+      qsa('input[name="limbi"]').forEach(chk => { chk.checked = (data.limbi || []).includes(chk.value); });
+      ['tg','fb','ig','x','wa','dc','pubmail','teams'].forEach(id => { if(data[id]) qs('#'+id).value = data[id]; });
     }
-  });
 
-  const tbody = document.querySelector('#statistici table tbody');
-  tbody.innerHTML = '';
+    // ===== PRETURI =====
+    function adaugaServiciu(){
+      const container = qs('#serviciiForm');
+      const wrap = document.createElement('div');
+      wrap.className = 'serviciu-entry';
+      wrap.style.cssText = 'display:grid;gap:0.5rem;margin:0.75rem 0;padding:0.75rem;border:1px dashed #ddd;border-radius:8px;';
+      wrap.innerHTML = `
+        <input type="text" class="srv-titlu" placeholder="Titlu serviciu" style="padding:0.5rem;border:1px solid #ccc;border-radius:8px;" />
+        <textarea class="srv-desc" placeholder="Descriere serviciu" rows="3" style="padding:0.5rem;border:1px solid #ccc;border-radius:8px;"></textarea>
+        <input type="number" class="srv-pret" placeholder="Preț (€)" style="padding:0.5rem;border:1px solid #ccc;border-radius:8px;" />
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button class="btn ok" type="button" onclick="salveazaServiciu(this)">Salvează serviciul</button>
+          <button class="btn danger" type="button" onclick="this.closest('.serviciu-entry').remove();toggleSaveLast()">Renunță</button>
+        </div>
+      `;
+      container.insertBefore(wrap, container.firstChild.nextSibling);
+      toggleSaveLast();
+      const titlu = wrap.querySelector('.srv-titlu'); if(titlu) titlu.focus();
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 
-  Object.entries(statistici).forEach(([luna, s]) => {
-    const total = s.showSuma + s.videoSuma + s.fotoSuma + s.cadouriSuma;
-    const showMediu = s.showNr ? (s.showSuma / s.showNr).toFixed(2) : '0.00';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${luna}</td>
-      <td>${s.showNr}</td>
-      <td>${s.showSuma.toFixed(2)}</td>
-      <td>${s.videoNr}</td>
-      <td>${s.videoSuma.toFixed(2)}</td>
-      <td>${s.fotoSuma.toFixed(2)}</td>
-      <td>${s.cadouriNr}</td>
-      <td>${s.cadouriSuma.toFixed(2)}</td>
-      <td>${total.toFixed(2)}</td>
-      <td>${showMediu}</td>
-    `;
-    tbody.appendChild(tr);
-  });
+    function toggleSaveLast(){
+      const saveLast = qs('#saveLastBtn');
+      if(saveLast) saveLast.style.display = qsa('.serviciu-entry').length > 0 ? 'inline-block' : 'none';
+    }
+
+    function saveLastServiciu(){
+      const list = qsa('.serviciu-entry');
+      const last = list[list.length-1];
+      if(!last){ alert('Nu există niciun serviciu de salvat.'); return; }
+      const btn = last.querySelector('button.btn.ok');
+      if(btn){ salveazaServiciu(btn); }
+    }
+
+    function salveazaServiciu(btn){
+      const entry = btn.closest('.serviciu-entry');
+      if(!entry) return;
+      const titlu = entry.querySelector('.srv-titlu')?.value.trim() || '';
+      const descriere = entry.querySelector('.srv-desc')?.value.trim() || '';
+      const pretStr = entry.querySelector('.srv-pret')?.value;
+      const pret = parseFloat(pretStr);
+
+      if(!titlu){ alert('Completează titlul serviciului.'); return; }
+      if(!Number.isFinite(pret) || pret <= 0){ alert('Introdu un preț valid (> 0).'); return; }
+
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      const key = 'servicii_' + user;
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      list.push({ titlu, descriere, pret });
+      localStorage.setItem(key, JSON.stringify(list));
+
+      entry.remove();
+      incarcaServiciiSalvate();
+      toggleSaveLast();
+      alert('Serviciu salvat (local).');
+    }
+
+    function incarcaServiciiSalvate(){
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      const key = 'servicii_' + user;
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      const tbody = qs('#tbody-servicii');
+      if(!tbody) return;
+      tbody.innerHTML = '';
+      list.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.titlu}</td><td>${item.descriere || '—'}</td><td style="text-align:right;">${Number(item.pret).toFixed(2)}</td><td><button class="btn danger" type="button" onclick="stergeServiciu(${idx})">Șterge</button></td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function stergeServiciu(idx){
+      const user = (localStorage.getItem('nume_utilizator') || 'global').toLowerCase();
+      const key = 'servicii_' + user;
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      list.splice(idx,1);
+      localStorage.setItem(key, JSON.stringify(list));
+      incarcaServiciiSalvate();
+    }
+
+    // ===== PLĂȚI / RETRAGERI =====
+    function returneazaPlata(btn){ if(confirm('Ești sigur(ă) că vrei să rambursezi această plată?')){ const tr = btn.closest('tr'); tr.style.textDecoration='line-through'; alert('Plata a fost marcată ca rambursată.'); } }
+
+    function adaugaRetragere(){
+      const tbody = qs('#retrageri-body');
+      const tr = document.createElement('tr');
+      const today = new Date();
+      const d = today.toISOString().split('T')[0];
+      tr.innerHTML = `
+        <td><input type="number" placeholder="Suma (€)" style="width:120px;padding:0.4rem;border:1px solid #ccc;border-radius:8px;" /></td>
+        <td>${d}</td>
+        <td>—</td>
+        <td>
+          <select>
+            <option value="">Selectează</option>
+            <option>Transfer bancar</option>
+            <option>Revolut</option>
+            <option>PayPal</option>
+            <option>Crypto</option>
+          </select>
+        </td>`;
+      tbody.appendChild(tr);
+    }
+
+    // Calculează statistici din tabelul de plăți (secțiunea Plăți)
+    function actualizeazaStatistici(){
+      const user = localStorage.getItem('nume_utilizator');
+      if(!user){ qs('#tbody-statistici').innerHTML = ''; return; }
+      const rows = qsa('#tabel-plati tbody tr');
+      const stats = {};
+      rows.forEach(row => {
+        const tds = qsa('td', row);
+        if(tds.length < 4) return;
+        const dataText = tds[0].textContent.trim();
+        const model = tds[1].textContent.trim();
+        const sumaText = tds[2].textContent.replace(/[^0-9.,]/g,'').replace(',', '.');
+        const tipText = tds[3].textContent.toLowerCase();
+        if(model !== user) return;
+        const data = new Date(dataText.replace(' ', 'T'));
+        if(isNaN(data)) return;
+        const luna = data.toLocaleString('ro-RO',{ month:'long' }) + ' ' + data.getFullYear();
+        const suma = parseFloat(sumaText) || 0;
+        if(!stats[luna]) stats[luna] = { showNr:0, showSuma:0, videoNr:0, videoSuma:0, fotoSuma:0, cadouriNr:0, cadouriSuma:0 };
+        const s = stats[luna];
+        if(tipText.includes('show')){ s.showNr++; s.showSuma += suma; }
+        else if(tipText.includes('video')){ s.videoNr++; s.videoSuma += suma; }
+        else if(tipText.includes('foto')){ s.fotoSuma += suma; }
+        else if(tipText.includes('cadou')){ s.cadouriNr++; s.cadouriSuma += suma; }
+      });
+      const tbody = qs('#tbody-statistici');
+      tbody.innerHTML = '';
+      Object.entries(stats).forEach(([luna, s]) => {
+        const total = s.showSuma + s.videoSuma + s.fotoSuma + s.cadouriSuma;
+        const showMediu = s.showNr ? (s.showSuma / s.showNr).toFixed(2) : '0.00';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${luna}</td>
+          <td>${s.showNr}</td>
+          <td>${s.showSuma.toFixed(2)}</td>
+          <td>${s.videoNr}</td>
+          <td>${s.videoSuma.toFixed(2)}</td>
+          <td>${s.fotoSuma.toFixed(2)}</td>
+          <td>${s.cadouriNr}</td>
+          <td>${s.cadouriSuma.toFixed(2)}</td>
+          <td>${total.toFixed(2)}</td>
+          <td>${showMediu}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ===== DOCS PREVIEW =====
+    function setupDocs(){
+      const form = qs('#uploadDocsForm');
+      if(!form) return;
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const preview = qs('#previewDocs');
+        preview.innerHTML = '';
+        const files = [ ...qs('#pdfUpload').files, ...qs('#imgUpload').files ];
+        files.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = e => {
+            if(file.type.includes('image')){
+              const img = new Image(); img.src = e.target.result; img.style.maxWidth = '200px'; img.style.borderRadius='8px';
+              preview.appendChild(img);
+            } else {
+              const a = document.createElement('a'); a.href = e.target.result; a.textContent = file.name; a.target = '_blank'; a.style.display='block';
+              preview.appendChild(a);
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // Nav clicks
+      qsa('nav button').forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.section)));
+      qsa('#subsections button').forEach(btn => btn.addEventListener('click', () => {
+        const id = btn.dataset.sub;
+        if(id === 'logout') return logoutUtilizatoare();
+        if(id === 'stergecont') return stergeContUtilizatoare();
+        showSubsection(id);
+        if(id === 'pagina'){ initCKE(); restorePagina(); restoreContacte(); }
+        if(id === 'preturi') incarcaServiciiSalvate();
+        if(id === 'statistici') actualizeazaStatistici();
+      }));
+
+      // Restore state
+      const nume = localStorage.getItem('nume_utilizator');
+      if(nume){
+        showSection('spatiucamgirl');
+        qs('#subsections').style.display = 'grid';
+        qs('#loginForm').style.display = 'none';
+        const last = localStorage.getItem('last_sub') || 'pagina';
+        showSubsection(last);
+        if(last === 'pagina'){ initCKE(); restorePagina(); restoreContacte(); }
+      } else {
+        // fără „Devino”: aterizare pe o secțiune publică
+        showSection('femei');
+      }
+
+      setupDocs();
+      actualizeazaStatistici();
+      incarcaServiciiSalvate();
+
+      // DEMO opțional: menține apăsat ALT și apasă D pentru a crea rapid un cont local
+      document.addEventListener('keydown', (e)=>{ if(e.altKey && (e.key==='d' || e.key==='D')) demoCreareCont(); });
     });
-  });
-  });
-}
-
-window.addEventListener('DOMContentLoaded', actualizeazaStatistici);
-
-}
-</script>
-<script>
-function adaugaServiciu() {
-  const container = document.getElementById('serviciiForm');
-  const div = document.createElement('div');
-  div.className = 'serviciu-entry';
-  div.innerHTML = `
-    <input type="text" placeholder="Titlu serviciu" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;">
-    <textarea placeholder="Descriere serviciu" rows="3" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;"></textarea>
-    <input type="number" placeholder="Preț (€)" style="padding: 0.5rem; border: 1px solid #ccc; border-radius: 6px;">
-  `;
-  const buttons = container.querySelectorAll('button');
-  container.insertBefore(div, buttons[0]);
-}
-</script>
+  </script>
+</body>
 </html>
-
-
-
-
-
